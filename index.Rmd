@@ -1,5 +1,5 @@
 ---
-title: "Jerri's Website"
+title: "Jerri Chen"
 output: 
   html_document:
     toc: true
@@ -10,22 +10,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Me at Work
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+I'm a pediatric anesthesiologist at [New York Presbyterian Morgan Stanley Children's Hospital](https://www.nyp.org/morganstanley) and Assistant Professor of Anesthesiology at [Columbia University Irving Medical Center](https://www.cuimc.columbia.edu/) in New York City. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+I received my MD and PhD degrees from the [Medical Scientist Training Program](https://www.einstein.yu.edu/education/mstp/) at the [Albert Einstein College of Medicine](https://www.einstein.yu.edu/), and a BA from [Wellesley College](https://www.wellesley.edu/). A native New Yorker, I attended [Hunter College High School](https://www.hunterschools.org/high-school/high-school-welcome). 
 
-```{r cars}
-summary(cars)
-```
+## Me Not at Work
 
-## Including Plots
+Outside of work I dabble in choral singing with [The Cecilia Chorus of New York](http://ceciliachorusny.org/) and in running. I ran my first marathon in 2018.
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+<img src="images/marathon.jpg" style="width:75%">
