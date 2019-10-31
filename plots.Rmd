@@ -1,0 +1,102 @@
+---
+title: "NYC Restaurant Inspection Data"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(viridis)
+library(p8105.datasets)
+library(plotly)
+library(httr)
+library(jsonlite)
+```
+
+```{r}
+get_all_inspections = function(url) {
+  
+  all_inspections = vector("list", length = 0)
+  
+  loop_index = 1
+  chunk_size = 50000
+  DO_NEXT = TRUE
+  
+  while (DO_NEXT) {
+    message("Getting data, page ", loop_index)
+    
+    all_inspections[[loop_index]] = 
+      GET(url,
+          query = list(`$order` = "zipcode",
+                       `$limit` = chunk_size,
+                       `$offset` = as.integer((loop_index - 1) * chunk_size)
+                       )
+          ) %>%
+      content("text") %>%
+      fromJSON() %>%
+      as_tibble()
+    
+    DO_NEXT = dim(all_inspections[[loop_index]])[1] == chunk_size
+    loop_index = loop_index + 1
+  }
+  
+  all_inspections
+  
+}
+
+url = "https://data.cityofnewyork.us/resource/43nn-pn8j.json"
+
+nyc_inspections = get_all_inspections(url) %>%
+  bind_rows() 
+```
+
+
+## Manhattan Chinese Restaurant Grades
+```{r}
+manhattan_chinese = nyc_inspections %>% 
+  rename(id = camis, restaurant_name = dba) %>% 
+  select(id, restaurant_name, boro, zipcode, cuisine_description, grade, latitude, longitude) %>% 
+  filter(
+    boro == "Manhattan",
+    cuisine_description == "Chinese",
+    !is.na(grade)) %>% 
+  distinct()
+```
+
+```{r}
+manhattan_chinese %>% 
+  mutate(text_label = str_c(restaurant_name, "Grade:",grade, sep = "<br />")) %>% 
+  plot_ly(
+    x = ~longitude, 
+    y = ~latitude, 
+    type = "scatter", 
+    mode = "markers", 
+    color = ~grade,
+    text = ~text_label,
+    alpha = 0.5) %>% 
+  layout(xaxis = list(autorange = "reversed"))
+```
+
+
+  mutate(grade = case_when(
+      grade == "A" ~ "A",
+      grade == "B" ~ "B",
+      grade == "C" ~ "C",
+      grade == "N" ~ "Not Yet Graded",
+      grade == "Z" ~ "Grade Pending",
+      grade == "P" ~ "Grade Pending (Reopening After Closure")
+    ) %>% 
+  
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

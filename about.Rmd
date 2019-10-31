@@ -10,6 +10,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+
 ## Academic and Hospital Appointments
 
 **Assistant Professor of Anesthesiology**  
