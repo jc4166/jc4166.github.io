@@ -29,7 +29,10 @@ instacart %>%
     y = ~n,
     color = ~aisle,
     type = "bar"
-  )
+  ) %>% 
+  layout(yaxis = list(title = "Number of Items")) %>% 
+  layout(xaxis = list(title = "Aisle")) %>% 
+  layout(title = "Number of Items Ordered From each Aisle")
 ```
 
 ## Is There A Correlation Between Order Day of Week and Days Since Prior Order?
@@ -53,7 +56,29 @@ instacart %>%
     x = ~order_dow,
     y = ~avg_days,
     type = "scatter", 
-    mode = "markers")
+    mode = "markers") %>% 
+  layout(yaxis = list(title = "Average Number of Days Since Last Order")) %>% 
+  layout(xaxis = list(title = "Day of Week")) %>% 
+  layout(title = "Relationship Between Order Day of Week and Number Of Days Since Last Order")
 ```
 
- 
+## What's the average time of ordering for the 10 most popular items?
+
+```{r}
+# Figure out 10 most popular items
+most_popular_10 = instacart %>% 
+  count(product_name, sort = TRUE) %>% 
+  top_n(10)
+
+instacart %>% 
+  filter(product_name %in% c("Bag of Organic Bananas", "Banana", "Large Lemon", "Limes", "Organic Avocado", "Organic Baby Spinach", "Organic Hass Avocado", "Organic Raspberries", "Organic Strawberries", "Strawberries")) %>% 
+  select(product_name, order_hour_of_day) %>% 
+  plot_ly(
+    y = ~order_hour_of_day, 
+    color = ~product_name, 
+    type = "box",
+    colors = "Set2") %>% 
+  layout(yaxis = list(title = "Hour of the Day")) %>% 
+  layout(title = "Distribution of Ordering Time for the 10 Most Popular Items")
+```
+
