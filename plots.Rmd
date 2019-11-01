@@ -53,7 +53,37 @@ url = "https://data.cityofnewyork.us/resource/43nn-pn8j.json"
 nyc_inspections = get_all_inspections(url) %>%
   bind_rows() 
 ```
+## Top 5 Most Popular Ethnic Cuisines in Manhattan
+```{r}
+popular_manhattan = nyc_inspections %>% 
+  rename(id = camis, restaurant_name = dba) %>% 
+  select(id, restaurant_name, boro, cuisine_description, latitude, longitude) %>% 
+  filter(
+    boro == "Manhattan") %>% 
+  distinct()
+```
 
+```{r}
+popular_manhattan %>% 
+  select(id, cuisine_description) %>% 
+  group_by(cuisine_description) %>% 
+  summarise(cuisine_count = n()) %>% 
+  arrange(-cuisine_count)
+```
+
+```{r}
+popular_manhattan %>% 
+  filter(cuisine_description %in% c("Italian", "Chinese", "Japanese", "Mexican", "French")) %>% 
+  plot_ly(
+    x = ~longitude, 
+    y = ~latitude, 
+    type = "scatter", 
+    mode = "markers", 
+    color = ~cuisine_description,
+    text = ~restaurant_name,
+    alpha = 0.5) %>% 
+    layout(xaxis = list(autorange = "reversed"))
+```
 
 ## Manhattan Chinese Restaurant Grades
 ```{r}
@@ -82,14 +112,16 @@ manhattan_chinese %>%
 ```
 
 
-  mutate(grade = case_when(
-      grade == "A" ~ "A",
-      grade == "B" ~ "B",
-      grade == "C" ~ "C",
-      grade == "N" ~ "Not Yet Graded",
-      grade == "Z" ~ "Grade Pending",
-      grade == "P" ~ "Grade Pending (Reopening After Closure")
-    ) %>% 
+## Manhattan Restaurants Average Score by Zip Code
+```{r}
+nyc_inspections %>% 
+  rename(id = camis, restaurant_name = dba) %>% 
+  select(id, restaurant_name, boro, cuisine_description, zipcode, score) %>% 
+  filter(
+    boro == "Manhattan",
+    !is.na(score))
+```
+
   
 ## Including Plots
 
