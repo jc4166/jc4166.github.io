@@ -1,0 +1,59 @@
+---
+title: "Exploring Instacart Data"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(viridis)
+library(p8105.datasets)
+library(plotly)
+library(httr)
+library(jsonlite)
+data("instacart")
+```
+
+##  How Many Items Are Ordered From Each Aisle?
+```{r}
+instacart %>% 
+  count(aisle) %>% 
+  filter(n > 10000) %>% 
+  mutate(aisle = fct_reorder(aisle, n, .desc = FALSE)) %>% 
+  plot_ly(
+    x = ~aisle,
+    y = ~n,
+    color = ~aisle,
+    type = "bar"
+  )
+```
+
+## Is There A Correlation Between Order Day of Week and Days Since Prior Order?
+```{r}
+instacart %>% 
+  select(order_id, order_dow, order_hour_of_day, days_since_prior_order) %>% 
+  distinct() %>% 
+  mutate(order_dow = case_when(
+      order_dow == "0" ~ "Sunday",
+      order_dow == "1" ~ "Monday",
+      order_dow == "2" ~ "Tuesday",
+      order_dow == "3" ~ "Wednesday",
+      order_dow == "4" ~ "Thursday",
+      order_dow == "5" ~ "Friday",
+      order_dow == "6" ~ "Saturday")
+    ) %>% 
+  group_by(order_dow) %>% 
+  summarize(avg_days = mean(days_since_prior_order)) %>% 
+  mutate(forcats::fct_reorder(order_dow, c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))) %>% 
+  plot_ly(
+    x = ~order_dow,
+    y = ~avg_days,
+    type = "scatter", 
+    mode = "markers")
+```
+
+ 
