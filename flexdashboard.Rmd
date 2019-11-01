@@ -16,12 +16,13 @@ library(jsonlite)
 data("instacart")
 ```
 
+
 Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
 
-```{r}
+```{r, warning=FALSE, echo=FALSE}
 instacart %>% 
   count(aisle) %>% 
   filter(n > 10000) %>% 
@@ -40,9 +41,10 @@ instacart %>%
 Column {data-width=350}
 -----------------------------------------------------------------------
 
+
 ### Chart B
 
-```{r}
+```{r, warning=FALSE, echo=FALSE}
 instacart %>% 
   select(order_id, order_dow, order_hour_of_day, days_since_prior_order) %>% 
   distinct() %>% 
@@ -68,9 +70,10 @@ instacart %>%
   layout(title = "Relationship Between Order Day of Week and Number Of Days Since Last Order")
 ```
 
+
 ### Chart C
 
-```{r}
+```{r, warning=FALSE, echo=FALSE}
 # Figure out 10 most popular items
 most_popular_10 = instacart %>% 
   count(product_name, sort = TRUE) %>% 
